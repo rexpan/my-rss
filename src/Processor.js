@@ -26,9 +26,7 @@ class Processor {
 
     async start() {
         const [error, items, meta] = await get9GagFeedVideoOnly(this.feedUrl);
-        if (error != null) {
-            return [error, false];
-        }
+        if (error != null) return [error, false];
 
         const newItems = items.filter(item  => this.tItem[item.id] == null);
         items.forEach(item => {

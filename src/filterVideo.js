@@ -11,6 +11,7 @@ const { Processor } = require("./Processor");
 
 const nSquash = 1000;
 const rssDir = "../rss/";
+const sleepTime = 2 * 60 * 1000;
 
 main();
 async function main(){
@@ -26,16 +27,15 @@ async function main(){
 
     let i = 0;
     while (true) {
-        console.log("begin process", i);
+        console.info("begin process", i);
         const [err, updated] = await p.start();
-        console.log("end process", i);
-        console.log();
 
-        await sleep(2*60*1000);
+        if (err != null) console.error(err);
+        else if (updated) ++i;
 
-        if (err == null && updated) {
-            ++i;
-        }
+        console.info("end process", i);
+
+        await sleep(sleepTime);
 
         if (i > nSquash) {
             console.log("begin squash");
