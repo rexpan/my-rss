@@ -1,7 +1,6 @@
 // @ts-check
 const {writeFileSync, createWriteStream, accessSync} = require("fs");
 const path = require("path");
-const request = require("request");
 const cheerio = require("cheerio");
 const {fetchAtom} = require("./fetchAtom");
 main();
@@ -65,7 +64,7 @@ const http = require('http');
 const https = require('https');
 
 function downloadFile(url, fileName){
-    const http_ = url.startsWith("https") ? https : http;
+    const httpGet = url.startsWith("https") ? https.get : http.get;
 
     return new Promise(resolve => {
         try {
@@ -77,9 +76,7 @@ function downloadFile(url, fileName){
         }
 
         const file = createWriteStream(fileName);
-        const request = http_.get(url, function(response) {
-            response.pipe(file);
-        });
+        const request = httpGet(url, (response) => response.pipe(file));
         request.on("error", function(error){ resolve([error]) })
         file.on("finish", function(){
             resolve([null]);

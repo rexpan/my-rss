@@ -1,17 +1,13 @@
 // @ts-check
 
 const path = require("path");
-const { promisify } = require('util');
-const { writeFile, writeFileSync, createWriteStream, accessSync } = require("fs");
-const writeFileAsync = promisify(writeFile);
+const {writeFile} = require("fs").promises;
 
 const cheerio = require("cheerio");
 
 const { fetchAtom } = require("./fetchAtom");
-const Feed = require('feed');
+const {Feed} = require('feed');
 const simpleGit = require('simple-git/promise');
-
-const feedUrl = "http://9gag-rss.com/api/rss/get?code=9GAGHot&format=1";
 
 class Processor {
     constructor(options) {
@@ -84,12 +80,12 @@ function getFeed(items, meta) {
 }
 
 async function pushToGitHub(xml, rssDir, atomFileName) {
-    await writeFileAsync(path.resolve(__dirname, rssDir, atomFileName), xml);
+    await writeFile(path.resolve(__dirname, rssDir, atomFileName), xml);
 
     const git = simpleGit(path.resolve(__dirname, rssDir));
     await git.add("9GAGHotVideoOnly.atom");
     await git.commit(`Update 9GAGHotVideoOnly.atom`);
-    await git.push(["origin", "master", "--force-with-lease"]);
+    await git.push("origin", "master", {"--force-with-lease":null});
 }
 
 module.exports = {

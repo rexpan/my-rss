@@ -1,10 +1,6 @@
 // @ts-check
-const {writeFileSync, createWriteStream, accessSync} = require("fs");
 const path = require("path");
-const request = require("request");
-const cheerio = require("cheerio");
 
-const Feed = require('feed');
 const simpleGit = require('simple-git/promise');
 
 const { Processor } = require("./Processor");
