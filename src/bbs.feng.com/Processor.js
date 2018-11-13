@@ -3,9 +3,6 @@
 const path = require("path");
 const {writeFile} = require("fs").promises;
 
-const cheerio = require("cheerio");
-const {getAsBrowser} = require("../common/request");
-
 const { fetchAtom } = require("../common/fetchAtom");
 const {Feed} = require('feed');
 const simpleGit = require('simple-git/promise');
@@ -14,9 +11,9 @@ class Processor {
     constructor(options) {
         this.tItem        = {};
         this.items        = [];
-        this.feedUrl      = "https://udemycoupon.learnviral.com/coupon-category/free100-discount/feed/";
+        this.feedUrl      = "https://bbs.feng.com/forum.php?mod=rss&fid=22&auth=d7f0JqsskTdwmUWNfEmY0jGhaQeV0Ym5yaQkJ0SdQtIJqwCE%2FtcyIgGINgTttoCpWQ";
         this.rssDir       = "";
-        this.atomFileName = "udemycoupon.learnviral.com_free100-discount.atom";
+        this.atomFileName = "bbs.feng.com_fid_22.atom";
 
         Object.assign(this, options);
     }
@@ -68,26 +65,21 @@ async function getOrigFeed(feedUrl) {
         return [error, null, null];
     }
 
-    const items = (await Promise.all(xs.map(parseItem))).filter(Boolean);
+    const items = xs.map(parseItem).filter(Boolean);
     return [null, items, meta];
 }
 
-async function parseItem(item) {
-    const { link } = item;
+// 网络小说 有声小说 集 册
+const whiteList0 = "网络小说".toLowerCase().split(" ");
+const whiteList = "epub 小说 电子书 新修版 精制版".toLowerCase().split(" ");
+const blackList = "画传 心理学 百科全书".toLowerCase().split(" ");
 
-    const [rErr,, rBody] = await getAsBrowser(link);
-    if (rErr != null) return item;
-
-    try {
-        const $ = cheerio.load(rBody);
-        const href = $(`a.coupon-code-link`).attr("href");
-        const url = new URL(href);
-        if (!url.search) return null;
-        return ({ ...item, link:href });
-    } catch(e) {
-        console.error(link, e);
-        return item;
-    }
+function parseItem(item) {
+    const { title, description } = item;
+    const text = `${title}\n${description}`.toLowerCase();
+    const isWhiteList = whiteList.some(keyword => text.includes(keyword));
+    const isBlackList = blackList.some(keyword => text.includes(keyword));
+    return (isWhiteList && !isBlackList) ? item : null;
 }
 
 function getFeed(items, meta) {
