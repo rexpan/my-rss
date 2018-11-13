@@ -5,7 +5,7 @@ const {writeFile} = require("fs").promises;
 
 const cheerio = require("cheerio");
 
-const { fetchAtom } = require("./fetchAtom");
+const { fetchAtom } = require("../common/fetchAtom");
 const {Feed} = require('feed');
 const simpleGit = require('simple-git/promise');
 
@@ -13,9 +13,9 @@ class Processor {
     constructor(options) {
         this.tItem        = {};
         this.items        = [];
-        this.feedUrl      = "";
+        this.feedUrl      = "http://9gag-rss.com/api/rss/get?code=9GAGHot&format=1";
         this.rssDir       = "";
-        this.atomFileName = "";
+        this.atomFileName = "9GAGHotVideoOnly.atom";
 
         Object.assign(this, options);
     }
@@ -42,14 +42,28 @@ class Processor {
         const xml = feed.atom1();
 
         try {
-            await pushToGitHub(xml, this.rssDir, this.atomFileName);
+            await this.pushToGitHub(xml, this.rssDir, this.atomFileName);
         } catch(e) {
             return [e, false];
         }
 
         return [null, true];
     }
+
+    async pushToGitHub(xml, rssDir, atomFileName) {
+        await writeFile(path.resolve(__dirname, rssDir, atomFileName), xml);
+
+        const git = simpleGit(path.resolve(__dirname, rssDir));
+        await git.add(atomFileName);
+        await git.commit(`Update ${atomFileName}`);
+        await git.push("origin", "master", {"--force-with-lease":null});
+    }
 }
+
+module.exports = {
+    default:Processor,
+    Processor,
+};
 
 async function get9GagFeedVideoOnly(feedUrl) {
     const [error, xs, meta] = await fetchAtom(feedUrl);
@@ -62,7 +76,7 @@ async function get9GagFeedVideoOnly(feedUrl) {
 }
 
 function parseItem(item) {
-    const { title, description, guid, link } = item;
+    const { description, guid } = item;
     const $ = cheerio.load(description);
     const img = $("img").attr("src");
     const video = $(`video source`).attr("src");
@@ -79,17 +93,6 @@ function getFeed(items, meta) {
     return feed;
 }
 
-async function pushToGitHub(xml, rssDir, atomFileName) {
-    await writeFile(path.resolve(__dirname, rssDir, atomFileName), xml);
 
-    const git = simpleGit(path.resolve(__dirname, rssDir));
-    await git.add("9GAGHotVideoOnly.atom");
-    await git.commit(`Update 9GAGHotVideoOnly.atom`);
-    await git.push("origin", "master", {"--force-with-lease":null});
-}
 
-module.exports = {
-    default:Processor,
-    Processor,
-};
 

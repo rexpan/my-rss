@@ -1,7 +1,11 @@
 const FeedParser = require('feedparser');
 const request = require('request'); // for fetching the feed
 
-module.exports.fetchAtom = function fetchAtom(url) {
+module.exports = ({
+    fetchAtom
+});
+
+function fetchAtom(url) {
     return new Promise((resolve) => {
         const req = request(url)
         const feedparser = new FeedParser({});

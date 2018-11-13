@@ -5,7 +5,7 @@ const simpleGit = require('simple-git/promise');
 
 const { Processor } = require("./Processor");
 
-const nSquash = 1000;
+const nSquash = 100;
 const rssDir = "../rss/";
 const sleepTime = 2 * 60 * 1000;
 
@@ -23,13 +23,13 @@ async function main(){
 
     let i = 0;
     while (true) {
-        console.info("begin process", i);
+        console.info("begin process %d (%s)", i, new Date());
         const [err, updated] = await p.start();
 
         if (err != null) console.error(err);
         else if (updated) ++i;
 
-        console.info("end process", i);
+        console.info("end process %d", i);
 
         await sleep(sleepTime);
 
