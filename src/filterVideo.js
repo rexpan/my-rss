@@ -3,7 +3,8 @@ const path = require("path");
 
 const simpleGit = require('simple-git/promise');
 
-const { Processor } = require("./Processor");
+const { Processor:P1 } = require("./9gag/Processor");
+const { Processor:P2 } = require("./udemycoupon.learnviral.com/Processor");
 
 const nSquash = 100;
 const rssDir = "../rss/";
@@ -15,30 +16,20 @@ async function main(){
     await squash();
     console.log("end squash\n");
 
-    const p = new Processor({
-        feedUrl     : "http://9gag-rss.com/api/rss/get?code=9GAGHot&format=1",
-        atomFileName: "9GAGHotVideoOnly.atom",
-        rssDir,
-    });
+    const ps = [P1, P2].map(Processor => new Processor({ rssDir }));
 
     let i = 0;
     while (true) {
         console.info("begin process %d (%s)", i, new Date());
-        const [err, updated] = await p.start();
-
-        if (err != null) console.error(err);
-        else if (updated) ++i;
-
+        for (const p of ps) {
+            const [err, updated] = await p.start();
+            if (err != null) { console.error(p.feedUrl, err); continue; }
+        }
         console.info("end process %d", i);
 
-        await sleep(sleepTime);
+        i++;
 
-        if (i > nSquash) {
-            console.log("begin squash");
-            await squash();
-            console.log("end squash\n");
-            i = 0;
-        }
+        await sleep(sleepTime);
     }
 }
 
