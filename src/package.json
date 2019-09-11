@@ -6,17 +6,17 @@
   "dependencies": {
     "caseless": "^0.12.0",
     "cheerio": "^1.0.0-rc.3",
-    "feed": "^2.0.4",
+    "feed": "^4.0.0",
     "feedparser": "^2.2.9",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.0",
     "request": "^2.88.0",
-    "server": "^1.0.18",
-    "simple-git": "^1.110.0",
+    "server": "^1.0.19",
+    "simple-git": "^1.126.0",
     "typedarray-to-buffer": "^3.1.5"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.22.11",
-    "@types/node": "^11.13.7"
+    "@types/cheerio": "^0.22.13",
+    "@types/node": "^12.12.5"
   },
   "scripts": {
     "upgrade": "yarn upgrade-interactive --latest"
