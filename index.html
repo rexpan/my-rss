@@ -1,5 +1,11 @@
 <ul>
-    <li><a href="./rss/9GAGHotVideoOnly.atom">9GAG Hot - No Gif/Video</a></li>
+    <li><a href="./rss/9GAGHotVideoOnly.atom">9GAG Hot - Video only</a></li>
     <li><a href="./rss/udemycoupon.learnviral.com_free100-discount.atom">udemy coupon</a></li>
     <li><a href="./rss/bbs.feng.com_fid_22.atom">bbs.feng.com epub</a></li>
 </ul>
+<script type="module">
+const xs = Array.from(document.querySelectorAll("li a"));
+xs.forEach(x => {
+    x.parentElement.innerHTML += ` | <a href="https://feedly.com/i/subscription/feed/${x.href}">feedly</a>`;
+});
+</script>
