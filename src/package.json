@@ -1,8 +1,8 @@
 {
-  "name": "9gag",
+  "name": "my-rss",
   "version": "1.0.0",
+  "private": true,
   "main": "index.js",
-  "license": "MIT",
   "dependencies": {
     "caseless": "^0.12.0",
     "cheerio": "^1.0.0-rc.3",
@@ -17,8 +17,5 @@
   "devDependencies": {
     "@types/cheerio": "^0.22.15",
     "@types/node": "^13.1.4"
-  },
-  "scripts": {
-    "upgrade": "yarn upgrade-interactive --latest"
   }
 }
