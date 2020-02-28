@@ -2,7 +2,7 @@
 // @ts-check
 const cheerio = require("cheerio");
 const { Feed } = require("feed");
-const { fetchAtom } = require("../common/fetchAtom");
+const { fetchAtom } = require("../common/fetch");
 const { pushToGitHub } = require("../common/git");
 
 class Processor {

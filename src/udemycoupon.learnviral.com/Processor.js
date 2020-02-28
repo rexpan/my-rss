@@ -2,8 +2,7 @@
 // @ts-check
 const cheerio = require("cheerio");
 const { Feed } = require("feed");
-const { getAsBrowser } = require("../common/request");
-const { fetchAtom } = require("../common/fetchAtom");
+const { fetchAtom, fetchHtml } = require("../common/fetch");
 const { pushToGitHub } = require("../common/git");
 
 class Processor {
@@ -61,7 +60,7 @@ async function getOrigFeed(feedUrl) {
 async function parseItem(item) {
     const { link } = item;
 
-    const [rErr, , rBody] = await getAsBrowser(link);
+    const [rErr, rBody] = await fetchHtml("GET", link);
     if (rErr != null) return item;
 
     try {
