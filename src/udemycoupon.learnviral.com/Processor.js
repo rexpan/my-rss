@@ -1,21 +1,17 @@
+"use strict";
 // @ts-check
-
-const path = require("path");
-const {writeFile} = require("fs").promises;
-
 const cheerio = require("cheerio");
-const {getAsBrowser} = require("../common/request");
-
+const { Feed } = require("feed");
+const { getAsBrowser } = require("../common/request");
 const { fetchAtom } = require("../common/fetchAtom");
-const {Feed} = require('feed');
-const simpleGit = require('simple-git/promise');
+const { pushToGitHub } = require("../common/git");
 
 class Processor {
     constructor(options) {
-        this.tItem        = {};
-        this.items        = [];
-        this.feedUrl      = "https://udemycoupon.learnviral.com/coupon-category/free100-discount/feed/";
-        this.rssDir       = "";
+        this.tItem = {};
+        this.items = [];
+        this.feedUrl = "https://udemycoupon.learnviral.com/coupon-category/free100-discount/feed/";
+        this.rssDir = "";
         this.atomFileName = "udemycoupon.learnviral.com_free100-discount.atom";
 
         Object.assign(this, options);
@@ -25,7 +21,7 @@ class Processor {
         const [error, items, meta] = await getOrigFeed(this.feedUrl);
         if (error != null) return [error, false];
 
-        const newItems = items.filter(item  => this.tItem[item.id] == null);
+        const newItems = items.filter(item => this.tItem[item.id] == null);
         items.forEach(item => {
             if (this.tItem[item.id] == null)
                 this.tItem[item.id] = item;
@@ -43,22 +39,12 @@ class Processor {
         const xml = feed.atom1();
 
         try {
-            await this.pushToGitHub(xml, this.rssDir, this.atomFileName);
-        } catch(e) {
+            await pushToGitHub(xml, this.rssDir, this.atomFileName);
+        } catch (e) {
             return [e, false];
         }
 
         return [null, true];
-    }
-
-
-    async pushToGitHub(xml, rssDir, atomFileName) {
-        await writeFile(path.resolve(__dirname, rssDir, atomFileName), xml);
-
-        const git = simpleGit(path.resolve(__dirname, rssDir));
-        await git.add(atomFileName);
-        await git.commit(`Update ${atomFileName}`);
-        await git.push("origin", "master", {"--force-with-lease":null});
     }
 }
 
@@ -75,7 +61,7 @@ async function getOrigFeed(feedUrl) {
 async function parseItem(item) {
     const { link } = item;
 
-    const [rErr,, rBody] = await getAsBrowser(link);
+    const [rErr, , rBody] = await getAsBrowser(link);
     if (rErr != null) return item;
 
     try {
@@ -83,8 +69,8 @@ async function parseItem(item) {
         const href = $(`a.coupon-code-link`).attr("href");
         const url = new URL(href);
         if (!url.search) return null;
-        return ({ ...item, link:href });
-    } catch(e) {
+        return ({ ...item, link: href });
+    } catch (e) {
         console.error(link, e);
         return item;
     }
@@ -97,7 +83,7 @@ function getFeed(items, meta) {
 }
 
 module.exports = {
-    default:Processor,
+    default: Processor,
     Processor,
 };
 

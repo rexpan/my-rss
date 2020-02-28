@@ -1,13 +1,9 @@
+"use strict";
 // @ts-check
-
-const path = require("path");
-const {writeFile} = require("fs").promises;
-
 const cheerio = require("cheerio");
-
+const { Feed } = require("feed");
 const { fetchAtom } = require("../common/fetchAtom");
-const {Feed} = require('feed');
-const simpleGit = require('simple-git/promise');
+const { pushToGitHub } = require("../common/git");
 
 class Processor {
     constructor(options) {
@@ -42,21 +38,12 @@ class Processor {
         const xml = feed.atom1();
 
         try {
-            await this.pushToGitHub(xml, this.rssDir, this.atomFileName);
+            await pushToGitHub(xml, this.rssDir, this.atomFileName);
         } catch(e) {
             return [e, false];
         }
 
         return [null, true];
-    }
-
-    async pushToGitHub(xml, rssDir, atomFileName) {
-        await writeFile(path.resolve(__dirname, rssDir, atomFileName), xml);
-
-        const git = simpleGit(path.resolve(__dirname, rssDir));
-        await git.add(atomFileName);
-        await git.commit(`Update ${atomFileName}`);
-        await git.push("origin", "master", {"--force-with-lease":null});
     }
 }
 

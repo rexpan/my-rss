@@ -2,8 +2,6 @@
 
 const path = require("path");
 
-const simpleGit = require('simple-git/promise');
-
 const { Processor:P1 } = require("./techrum.vn/Processor");
 const { Processor:P2 } = require("./udemycoupon.learnviral.com/Processor");
 
@@ -12,10 +10,6 @@ const sleepTime = 2 * 60 * 1000;
 
 main();
 async function main(){
-    console.log("begin squash");
-    await squash();
-    console.log("end squash\n");
-
     const ps = [
         P1,
         P2,
@@ -38,9 +32,4 @@ async function main(){
 
 async function sleep(n){
     return new Promise(resolve => setTimeout(() => resolve(), n));
-}
-
-function squash() {
-    const git = simpleGit(path.resolve(__dirname, rssDir));
-    return git.reset(["--hard", "dev"])
 }

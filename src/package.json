@@ -7,12 +7,12 @@
     "feed": "^4.1.0",
     "feedparser": "^2.2.9",
     "node-fetch": "^2.6.0",
-    "request": "^2.88.0",
-    "simple-git": "^1.129.0"
+    "request": "^2.88.2",
+    "simple-git": "^1.131.0"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.22.15",
-    "@types/node": "^13.1.4",
+    "@types/cheerio": "^0.22.16",
+    "@types/node": "^13.7.6",
     "@yarnpkg/pnpify": "^2.0.0-rc.18",
     "typescript": "rc"
   },
