@@ -5,7 +5,7 @@ const path = require("path");
 const { Processor:P1 } = require("./techrum.vn/Processor");
 const { Processor:P2 } = require("./udemycoupon.learnviral.com/Processor");
 
-const rssDir = path.resolve(__dirname, "../rss/");
+const rssDir = path.resolve(__dirname, "../../rss/");
 const sleepTime = 2 * 60 * 1000;
 
 main();
