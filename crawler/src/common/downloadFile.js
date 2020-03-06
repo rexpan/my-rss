@@ -1,14 +1,9 @@
 // @ts-check
-const { createWriteStream, accessSync } = require("fs");
+import fs from "fs"; const { createWriteStream, accessSync } = fs;
+import http from 'http';
+import https from 'https';
 
-const http = require('http');
-const https = require('https');
-
-module.exports = ({
-    downloadFile
-});
-
-function downloadFile(url, fileName) {
+export function downloadFile(url, fileName) {
     const http_ = url.startsWith("https") ? https : http;
 
     return new Promise(resolve => {

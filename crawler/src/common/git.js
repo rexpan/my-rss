@@ -1,22 +1,22 @@
-const path = require("path");
-const {writeFile} = require("fs").promises;
-const simpleGit = require('simple-git/promise');
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 
-module.exports = {
-    pushToGitHub,
-    squash
-};
+import { resolve } from "path";
+import fs from "fs";
+const { writeFile } = fs.promises;
 
-async function pushToGitHub(xml, rssDir, atomFileName) {
-    await writeFile(path.resolve(__dirname, rssDir, atomFileName), xml);
+const simpleGit = require("simple-git/promise");
 
-    const git = simpleGit(path.resolve(__dirname, rssDir));
+export async function pushToGitHub(xml, rssDir, atomFileName) {
+    await writeFile(resolve(rssDir, atomFileName), xml);
+
+    const git = simpleGit(resolve(rssDir));
     await git.add(atomFileName);
     await git.commit(`Update ${atomFileName}`);
     await git.push("origin", "master", {"--force-with-lease":null});
 }
 
-function squash() {
-    const git = simpleGit(path.resolve(__dirname, rssDir));
+export function squash() {
+    const git = simpleGit(resolve(rssDir));
     return git.reset(["--hard", "dev"])
 }

@@ -1,11 +1,14 @@
-"use strict";
 // @ts-check
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 const cheerio = require("cheerio");
 const { Feed } = require("feed");
-const { fetchAtom, fetchHtml } = require("../common/fetch");
-const { pushToGitHub } = require("../common/git");
 
-class Processor {
+import { fetchAtom, fetchHtml } from "../common/fetch.js";
+import { pushToGitHub } from "../common/git.js";
+
+export class Processor {
     constructor(options) {
         this.tItem = {};
         this.items = [];
@@ -46,6 +49,7 @@ class Processor {
         return [null, true];
     }
 }
+export default Processor;
 
 async function getOrigFeed(feedUrl) {
     const [error, xs, meta] = await fetchAtom(feedUrl);
@@ -80,9 +84,3 @@ function getFeed(items, meta) {
     items.forEach(({ id, video, img, ...post }) => feed.addItem(post));
     return feed;
 }
-
-module.exports = {
-    default: Processor,
-    Processor,
-};
-

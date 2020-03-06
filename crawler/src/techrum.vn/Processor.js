@@ -1,11 +1,14 @@
-"use strict";
 // @ts-check
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 const cheerio = require("cheerio");
 const { Feed } = require("feed");
-const { fetchAtom, fetchHtml } = require("../common/fetch");
-const { pushToGitHub } = require("../common/git");
 
-class Processor {
+import { fetchAtom, fetchHtml } from "../common/fetch.js";
+import { pushToGitHub } from "../common/git.js";
+
+export class Processor {
     tItem         = new Map();
     items         = [];
     feedUrl       = "https://www.techrum.vn/forums/-/index.rss";
@@ -24,7 +27,7 @@ class Processor {
 
         do {
             const [hpErr, hpHtml] = await fetchHtml("GET", this.homePageUrl);
-            if (hpErr != null) { console.error(e); break; }
+            if (hpErr != null) { console.error(hpErr); break; }
             try {
                 const $ = cheerio.load(hpHtml);
                 const hpGuids = $(`.porta-article-item .block-header a`).map((i, a) => `https://www.techrum.vn${a.attribs.href}`).toArray();
@@ -52,6 +55,7 @@ class Processor {
         return [null, true];
     }
 }
+export default Processor;
 
 async function getOrigFeed(feedUrl) {
     const [error, items, meta] = await fetchAtom(feedUrl);
@@ -59,15 +63,8 @@ async function getOrigFeed(feedUrl) {
     return [undefined, items, meta];
 }
 
-
 function getFeed(items, meta) {
     const feed = new Feed(meta);
     items.forEach(({ id, video, img, ...post }) => feed.addItem(post));
     return feed;
 }
-
-module.exports = {
-    default:Processor,
-    Processor,
-};
-

@@ -1,11 +1,13 @@
-"use strict";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 
-const path = require("path");
+import { Processor as P1 } from "./techrum.vn/Processor.js";
+import { Processor as P2 } from "./udemycoupon.learnviral.com/Processor.js";
 
-const { Processor:P1 } = require("./techrum.vn/Processor");
-const { Processor:P2 } = require("./udemycoupon.learnviral.com/Processor");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const rssDir = path.resolve(__dirname, "../../rss/");
+const rssDir = resolve(__dirname, "../../rss/");
 const sleepTime = 2 * 60 * 1000;
 
 main();

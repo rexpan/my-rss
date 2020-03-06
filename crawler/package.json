@@ -1,7 +1,13 @@
 {
   "name": "my-rss",
   "private": true,
-  "main": "./src/main.js",
+  "type": "module",
+  "module": "./crawler/src/main.js",
+  "main": "./crawler/dist/main.js",
+  "exports": {
+    "import": "./crawler/src/main.js",
+    "default": "./crawler/dist/main.js"
+  },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "feed": "^4.1.0",

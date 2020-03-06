@@ -1,13 +1,9 @@
-"use strict";
 // @ts-check
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 
-const {default: fetch} = require('node-fetch');
-const FeedParser = require('feedparser');
-
-module.exports = ({
-    fetchHtml,
-    fetchAtom,
-});
+import fetch from "node-fetch";
+const FeedParser = require("feedparser");
 
 const headers = {
     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4027.0 Safari/537.36",
@@ -28,7 +24,7 @@ async function _fetch(method, url, body, options) {
     } catch (e) { return [e, undefined] }
 }
 
-async function fetchHtml(method, url, body, options) {
+export async function fetchHtml(method, url, body, options) {
     const [e, res] = await _fetch(method, url, body, options);
     if (e) return [e, ""];
 
@@ -46,7 +42,7 @@ async function fetchHtml(method, url, body, options) {
     } catch (e) { return [e, ""] }
 }
 
-async function fetchAtom(url) {
+export async function fetchAtom(url) {
     const [err, res] = await _fetch("GET", url);
     if (err) return [err, [], {}];
 

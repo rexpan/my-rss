@@ -1,11 +1,12 @@
-"use strict";
 // @ts-check
-const cheerio = require("cheerio");
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 const { Feed } = require("feed");
-const { fetchAtom } = require("../common/fetch");
-const { pushToGitHub } = require("../common/git");
 
-class Processor {
+import { fetchAtom } from "../common/fetch.js";
+import { pushToGitHub } from "../common/git.js";
+
+export class Processor {
     constructor(options) {
         this.tItem        = {};
         this.items        = [];
@@ -76,8 +77,5 @@ function getFeed(items, meta) {
     return feed;
 }
 
-module.exports = {
-    default:Processor,
-    Processor,
-};
+export default Processor;
 
