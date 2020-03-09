@@ -2,11 +2,11 @@
   "name": "my-rss",
   "private": true,
   "type": "module",
-  "module": "./crawler/src/main.js",
-  "main": "./crawler/dist/main.js",
+  "module": "./src/main.js",
+  "main": "./dist/main.js",
   "exports": {
-    "import": "./crawler/src/main.js",
-    "default": "./crawler/dist/main.js"
+    "import": "./src/main.js",
+    "default": "./dist/main.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
