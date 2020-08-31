@@ -2,7 +2,6 @@ import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
 import { Processor as P1 } from "./techrum.vn/Processor.js";
-import { Processor as P2 } from "./udemycoupon.learnviral.com/Processor.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,7 +13,6 @@ main();
 async function main(){
     const ps = [
         P1,
-        P2,
     ].map(Processor => new Processor({ rssDir }));
 
     let i = 0;
