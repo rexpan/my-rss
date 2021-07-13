@@ -1,9 +1,6 @@
 // @ts-check
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-
-const cheerio = require("cheerio");
-const { Feed } = require("feed");
+import cheerio from "cheerio";
+import { Feed } from "feed";
 
 import { fetchAtom, fetchHtml } from "../common/fetch.js";
 import { pushToGitHub } from "../common/git.js";
