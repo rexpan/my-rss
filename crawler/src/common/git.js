@@ -1,11 +1,7 @@
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-
 import { resolve } from "path";
-import fs from "fs";
-const { writeFile } = fs.promises;
+import { writeFile } from "fs/promises";
 
-const simpleGit = require("simple-git/promise");
+import simpleGit from "simple-git";
 
 export async function pushToGitHub(xml, rssDir, atomFileName) {
     await writeFile(resolve(rssDir, atomFileName), xml);

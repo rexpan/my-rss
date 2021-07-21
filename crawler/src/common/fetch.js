@@ -1,9 +1,8 @@
 // @ts-check
 import { createRequire } from "module";
-const require = createRequire(import.meta.url);
 
 import fetch from "node-fetch";
-const FeedParser = require("feedparser");
+import FeedParser from "feedparser";
 
 const headers = {
     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4027.0 Safari/537.36",
