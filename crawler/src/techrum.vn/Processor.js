@@ -1,5 +1,5 @@
 // @ts-check
-import HTMLParser from 'node-html-parser';
+import { parse } from 'node-html-parser';
 import { Feed } from "feed";
 
 import { fetchAtom, fetchHtml } from "../common/fetch.js";
@@ -26,7 +26,7 @@ export class Processor {
             const [hpErr, hpHtml] = await fetchHtml("GET", this.homePageUrl);
             if (hpErr != null) { console.error(hpErr); break; }
             try {
-                const root = HTMLParser.parse(hpHtml);
+                const root = parse(hpHtml);
                 const hpGuids =root.querySelectorAll(`.porta-article-item .block-header a`).map((a) => `https://www.techrum.vn${a.attributes.href}`);
                 for (const hpGuid of hpGuids) this.homePageGuids.add(hpGuid);
             } catch (e) { console.error(e); }

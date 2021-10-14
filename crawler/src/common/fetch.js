@@ -1,8 +1,7 @@
 // @ts-check
-import { createRequire } from "module";
-
-import fetch from "node-fetch";
+import { fetch } from "undici";
 import FeedParser from "feedparser";
+import { pipeline } from "node:stream";
 
 const headers = {
     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4027.0 Safari/537.36",
@@ -78,7 +77,7 @@ export async function fetchAtom(url) {
             resolve([undefined, items, meta]);
         });
 
-        res.body.pipe(feedparser);
+        pipeline(res.body, feedparser, console.error);
     });
 }
 
